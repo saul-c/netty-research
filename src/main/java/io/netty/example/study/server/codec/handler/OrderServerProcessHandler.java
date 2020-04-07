@@ -21,6 +21,6 @@ public class OrderServerProcessHandler extends SimpleChannelInboundHandler<Reque
         responseMessage.setMessageHeader(requestMessage.getMessageHeader());
         responseMessage.setMessageBody(operationResult);
 
-        ctx.writeAndFlush(requestMessage);
+        ctx.writeAndFlush(responseMessage);
     }
 }
