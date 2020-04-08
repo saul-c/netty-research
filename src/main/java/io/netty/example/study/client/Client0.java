@@ -5,14 +5,15 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioChannelOption;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.example.study.client.codec.*;
-import io.netty.example.study.common.Operation;
 import io.netty.example.study.common.RequestMessage;
 import io.netty.example.study.common.order.OrderOperation;
 import io.netty.example.study.util.IdUtil;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.internal.UnstableApi;
 
 import java.util.concurrent.ExecutionException;
 
@@ -20,10 +21,12 @@ import java.util.concurrent.ExecutionException;
  * @author : chenglong.ma@shuyun.com
  * @date : 2020/4/6
  */
-public class Client {
+@UnstableApi
+public class Client0 {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.channel(NioSocketChannel.class);
+        bootstrap.option(NioChannelOption.CONNECT_TIMEOUT_MILLIS, 10 * 1000);
         bootstrap.group(new NioEventLoopGroup());
 
         bootstrap.handler(new ChannelInitializer<NioSocketChannel>() {
@@ -41,7 +44,10 @@ public class Client {
         });
 
         ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 8090).sync();
-
+        RequestMessage requestMessage = new RequestMessage(IdUtil.nextId(), new OrderOperation(1001, "tudou"));
+        //for(int i = 0; i < 10000; i++) {
+        channelFuture.channel().writeAndFlush(requestMessage);
+      //  }
         channelFuture.channel().closeFuture().get();
     }
 }
