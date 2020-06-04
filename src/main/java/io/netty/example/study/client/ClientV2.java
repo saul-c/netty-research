@@ -26,6 +26,8 @@ import java.util.concurrent.ExecutionException;
  */
 public class ClientV2 {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+        //客户端启动组件
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.group(new NioEventLoopGroup());
@@ -48,7 +50,7 @@ public class ClientV2 {
 
             }
         });
-
+        //启动客户端
         ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 8090).sync();
 
         RequestMessage requestMessage = new RequestMessage(IdUtil.nextId(), new OrderOperation(1001, "tudou"));
