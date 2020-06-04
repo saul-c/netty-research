@@ -23,11 +23,16 @@ import java.util.concurrent.ExecutionException;
  */
 public class Server {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+        //服务启动组件
         ServerBootstrap bootstrap = new ServerBootstrap();
+        //channel服务器端监听套接字通道
         bootstrap.channel(NioServerSocketChannel.class);
         bootstrap.handler(new LoggingHandler(LogLevel.INFO));
+        //Reactor 多线程模型
+        //NioEventLoopGroup 实际上就是个线程池，一个 EventLoopGroup 包含一个或者多个 EventLoop
         bootstrap.group(new NioEventLoopGroup());
-
+        //ChannelPipeline 提供了 ChannelHandler 责任链的容器
+        //解编码处理
         bootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
@@ -37,6 +42,7 @@ public class Server {
                 pipeline.addLast(new OrderProtocolDecoder());
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+                //在链上加入自定义的Handler
                 pipeline.addLast(new OrderServerProcessHandler());
             }
         });

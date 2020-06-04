@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ClientV1 {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.group(new NioEventLoopGroup());
@@ -39,6 +40,7 @@ public class ClientV1 {
         });
 
         ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 8090).sync();
+
         Operation operation = new OrderOperation(1001, "tudou");
         channelFuture.channel().writeAndFlush(operation);
 

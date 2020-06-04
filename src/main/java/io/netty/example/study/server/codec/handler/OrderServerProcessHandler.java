@@ -12,9 +12,12 @@ import io.netty.example.study.common.ResponseMessage;
  * @date : 2020/4/6
  */
 public class OrderServerProcessHandler extends SimpleChannelInboundHandler<RequestMessage> {
+
+    //channelRead0 处理业务逻辑
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestMessage requestMessage) throws Exception {
         Operation operation = requestMessage.getMessageBody();
+
         OperationResult operationResult = operation.execute();
 
         ResponseMessage responseMessage = new ResponseMessage();
